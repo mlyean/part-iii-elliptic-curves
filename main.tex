@@ -102,7 +102,7 @@ We have $a^2 + b^2 = c^2$, and $\area(\Delta) = \frac{1}{2} a b$.
     \begin{equation*}
         \left(\frac{b}{2}\right)^2 = \frac{c+a}{2} \frac{c-a}{2}
     \end{equation*}
-    is a product of coprime positive integers. Indeed $(\frac{c+a}{2}, \frac{c-a}{2}) \mid (a, c) = 1$. Thus by unique factorisation in $\ZZ$, $\frac{c+a}{2} = u^2$ and $\frac{c-a}{2} = v^2$ for some $u, v \in \ZZ$. Then $a = u^2 - v^2$, $b = 2uv$, and $c = u^2 + v^2$.
+    is a product of coprime positive integers. Indeed $(\frac{c+a}{2}, \frac{c-a}{2}) \mid (a, c) = 1$. Thus by unique factorisation in $\ZZ$, $\frac{c+a}{2} = u^2$ and $\frac{c-a}{2} = v^2$ for some $u, v \in \ZZ_{>0}$. Then $a = u^2 - v^2$, $b = 2uv$, and $c = u^2 + v^2$.
 \end{proof}
 
 \begin{definition*}
@@ -131,7 +131,7 @@ We have $a^2 + b^2 = c^2$, and $\area(\Delta) = \frac{1}{2} a b$.
 \begin{proof}
     Suppose we have a solution $u, v, w$. Dividing out the common factor of $u$ and $v$, we may assume that $u, v$ are coprime. By flipping signs of $u, v$, we may assume that $u > 0$. Clearly we can assume $w > 0$. We can also assume $v > 0$: if $v < 0$, then replace $(u, v, w)$ by $(-v, u, w)$. If $u \equiv v \pmod{2}$, then replace $(u, v, w)$ by $(\frac{u+v}{2}, \frac{u-v}{2}, \frac{w}{2})$.
 
-    Thus $u, v, u+v, u-v$ are pairwise coprime\footnote{$(u+v, u-v) \mid 2(u, v) = 2$, but $u \pm v$ are both odd, so $(u+v, u-v) = 1$} positive integers with their product a square. By unique factorisation in $\ZZ$, $u = a^2$, $v = b^2$, $u+v = c^2$, and $u-v = d^2$ for some $a, b, c, d \in \ZZ$. Since $u \not\equiv v \pmod{2}$, $c, d$ are both odd. Then
+    Thus $u, v, u+v, u-v$ are pairwise coprime\footnote{$(u+v, u-v) \mid 2(u, v) = 2$, but $u \pm v$ are both odd, so $(u+v, u-v) = 1$} positive integers with their product a square. By unique factorisation in $\ZZ$, $u = a^2$, $v = b^2$, $u+v = c^2$, and $u-v = d^2$ for some $a, b, c, d \in \ZZ_{>0}$. Since $u \not\equiv v \pmod{2}$, $c, d$ are both odd. Then
     \begin{equation*}
         \left(\frac{c+d}{2}\right)^2 + \left(\frac{c-d}{2}\right)^2 = \frac{c^2 + d^2}{2} = u = a^2
     \end{equation*}
@@ -141,7 +141,7 @@ We have $a^2 + b^2 = c^2$, and $\area(\Delta) = \frac{1}{2} a b$.
         \draw (0,0) -- node[auto, swap]{$\frac{c+d}{2}$} (2,0) -- node[auto, swap]{$\frac{c-d}{2}$} (2,1.6) -- node[auto, swap]{$a$} cycle;
     \end{tikzpicture}
     \end{center}
-    is a primitive triangle of area $\frac{c^2 - d^2}{8} = \frac{v}{4} = (\frac{b}{2})^2$. Let $w_1 = \frac{b}{2}$. Let $u_1, v_1 \in \ZZ$ be the $u, v$ in \autoref{lem:1_1} corresponding to this triangle. Then $w_1^2 = u_1 v_1 (u_1 + v_1) (u_1 - v_1)$, which gives a new solution to \eqref{eqn:1_3_star}. We have $4 w_1^2 = b^2 = v \mid w^2$ implies $w_1 \le \frac{w}{2}$, so we have a solution with a smaller $w$. By Fermat's method of infinite descent, there is no solution to \eqref{eqn:1_3_star}.
+    is a primitive triangle of area $\frac{c^2 - d^2}{8} = \frac{v}{4} = (\frac{b}{2})^2$. Let $w_1 = \frac{b}{2}$. Let $u_1, v_1 \in \ZZ_{>0}$ be the $u, v$ in \autoref{lem:1_1} corresponding to this triangle. Then $w_1^2 = u_1 v_1 (u_1 + v_1) (u_1 - v_1)$, which gives a new solution to \eqref{eqn:1_3_star}. We have $4 w_1^2 = b^2 = v \mid w^2$ implies $w_1 \le \frac{w}{2}$, so we have a solution with a smaller $w$. By Fermat's method of infinite descent, there is no solution to \eqref{eqn:1_3_star}.
 \end{proof}
 
 Now we will see a variant of this for polynomials. In this section , we let $K$ be a field with $\Char K \neq 2$, and $\overline{K}$ its algebraic closure.
@@ -166,7 +166,7 @@ Now we will see a variant of this for polynomials. In this section , we let $K$ 
             \begin{equation}\label{eqn:weierstrass_eqn}
                 Y^2 = f(X)
             \end{equation}
-            where $f \in K[X]$ is a monic cubic polynomial with distinct roots in $\overline{K}$. \eqref{eqn:weierstrass_eqn} is called a Weierstrass equation.
+            where $f \in K[X]$ is a monic cubic polynomial with distinct roots in $\overline{K}$. \eqref{eqn:weierstrass_eqn} is called a \emph{Weierstrass equation}.
 
         \item For $L/K$ a field extension, set $E(L) = \{(x, y) \in L \mid y^2 = f(x)\} \cup \{0\}$, where $0$ denotes the point at infinity.
     \end{enumerate}
