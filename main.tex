@@ -9,7 +9,9 @@
 \usepackage{commath}
 \usepackage{comment}
 \usepackage{enumitem}
+\usepackage{float}
 \usepackage{hyperref}
+\usepackage{pgfplots}
 \usepackage{stmaryrd}
 \usepackage{thmtools}
 \usepackage{tikz}
@@ -218,28 +220,80 @@ In this section we will work over an algebraically closed field $K = \overline{K
 \begin{example}\label{eg:2_2}\phantom{}
     \begin{enumerate}[label=(\alph*)]
         \item Any nonsingular plane conic is rational. We illustrate the proof of this with the unit circle:
-            \begin{figure}[htpb]
-            \begin{center}
+            \begin{figure}[H]
+            \centering
+            \scalebox{0.8}{
             \begin{tikzpicture}
                 \coordinate (A) at (-2,0);
                 \coordinate (B) at ({2*cos(50)}, {2*sin(50)});
 
                 \draw[name path=Circle] (0,0) circle (2);
-                \draw[->] (-3,0) -- (3,0) node[below] {$x$};
-                \draw[->] (0,-3) -- (0,3) node[left] {$y$};
-                \draw[shorten >= -1.5cm, shorten <= -1cm, name path=Line] (A) -- (B);
+                \draw[->] (-2.5,0) -- (2.5,0) node[below] {$x$};
+                \draw[->] (0,-2.5) -- (0,2.5) node[left] {$y$};
+                \draw[shorten >= -1cm, shorten <= -1cm, name path=Line] (A) -- (B);
 
                 \filldraw[black] (A) circle (2pt) node[above left] {$(-1, 0)$} (B) circle (2pt);
                 \node at (-2, -2) {$x^2+y^2=1$};
                 \node at (3.2, 1.7) {$y=t(x+1)$};
-            \end{tikzpicture}
-            \end{center}
-            \caption{Illustration of the proof that the unit circle is rational}%
-            \label{fig:1}
+            \end{tikzpicture}}
             \end{figure}
             We choose a point on the conic, here we take $(-1, 0)$. Then draw a line of slope $t$ through the point, $y = t(x+1)$. Solving for the other intersection point, we have $x^2 + t^2 (x+1)^2$, which implies $(x+1)(x-1+t^2(x+1)) = 0$. Thus $(x, y) = (\frac{1-t^2}{1+t^2}, \frac{2t}{1+t^2})$ gives a rational parameterisation.
 
-        \item Any singular plane cubic is rational. We apply the same procedure as before, but we choose the singular point instead of an arbitrary point. %TODO: continue
+        \item Any singular plane cubic is rational. We apply the same procedure as before, but we choose the singular point instead of an arbitrary point.
+            \begin{figure}[H]
+            \centering
+            \begin{minipage}{.5\textwidth}
+            \centering
+            \scalebox{0.8}{
+            \begin{tikzpicture}[scale=1, transform shape]
+                \begin{axis}[
+                    axis lines=middle,
+                    xlabel=$x$,
+                    ylabel=$y$,
+                    xtick=\empty,
+                    ytick=\empty,
+                    xmin=-2, xmax=2,
+                    ymin=-2, ymax=2,
+                    xlabel style={anchor=north},
+                    ylabel style={anchor=east},
+                    samples=100,
+                    ]
+                \addplot[thick,domain=0:2, name path=curve, blue] {sqrt(x^3)};
+                \addplot[thick,domain=0:2, blue] {-sqrt(x^3)};
+                \addplot[domain=-2:2, name path=line] {1*x};
+                \fill [name intersections={of=curve and line,by={a,b}}] (a) circle[radius=2pt] (b) circle[radius=2pt];
+                \node[blue] at (axis cs:1.4,-0.8) {$y^2=x^3$};
+                \node at (axis cs:1.7,1.2) {$y=tx$};
+                \end{axis}
+            \end{tikzpicture}}
+            \end{minipage}%
+            \begin{minipage}{.5\textwidth}
+            \centering
+            \scalebox{0.8}{
+            \begin{tikzpicture}[scale=1, transform shape]
+                \begin{axis}[
+                    axis lines=middle,
+                    xlabel=$x$,
+                    ylabel=$y$,
+                    xtick=\empty,
+                    ytick=\empty,
+                    xmin=-2, xmax=2,
+                    ymin=-2, ymax=2,
+                    xlabel style={anchor=north},
+                    ylabel style={anchor=east},
+                    samples=100,
+                    ]
+                \addplot[thick,domain=-1:2, name path=curve, blue] {x*sqrt(x+1)};
+                \addplot[thick,domain=-1:2, blue] {-x*sqrt(x+1)};
+                \addplot[domain=-2:2, name path=line] {1.35*x};
+                \fill [name intersections={of=curve and line,by={a,b}}] (a) circle[radius=2pt] (b) circle[radius=2pt];
+                \node[blue] at (axis cs:1.3,-0.5) {$y^2=x^2(x+1)$};
+                \node at (axis cs:1.5,1.3) {$y=tx$};
+                \end{axis}
+            \end{tikzpicture}}
+            \end{minipage}
+            \end{figure}
+            The curve on the left has parameterisation $(x,y)=(t^2,t^3)$. The parameterisation of the other curve is left as an exercise. Note that these are not elliptic curves.
 
         \item \autoref{cor:1_6} shows that elliptic curves are not rational.
     \end{enumerate}
@@ -284,7 +338,18 @@ Let $C$ be an algebraic curve, $K(C)$ its function field, and $P \in C$ a smooth
 
 \begin{example}\label{eg:2_5}
     Let $C = \{g = 0\} \subseteq \bA^2$, with $g \in k[x,y]$ irreducible. Then $K(C) = \Frac \frac{k[x,y]}{(g)}$. Write $g = g_0 + g_1(x,y) + g_2(x,y) + \ldots$, where $g_i$ is homogeneous of degree $i$. Suppose that $P = (0, 0) \in C$ is a smooth point, i.e. $g_0 = 0$, and $g_1(x,y) = \alpha x + \beta y$ with $\alpha, \beta$ not both zero.
-
+    \begin{figure}[htpb]
+    \centering
+    \begin{tikzpicture}[scale=1, transform shape]
+        \coordinate (O) at (0,0);
+        \draw (O) arc (135:90:2) node[right] {$C$};
+        \draw (O) arc (135:180:2);
+        \draw (-1,-1) node[below left] {$\alpha x + \beta y = 0$} -- (1,1);
+        \filldraw (O) circle (1pt) node[above left] {$P$};
+        \draw[dashed] (0.2,-1) -- (-0.2,1) node[above] {$\gamma x + \delta y = 0$};
+    \end{tikzpicture}
+    \end{figure}
+    
     Let $\gamma, \delta \in K$. Then
 
     \begin{fact}
@@ -301,7 +366,7 @@ Let $C$ be an algebraic curve, $K(C)$ its function field, and $P \in C$ a smooth
     \end{equation}
     and $P$ is the point $(t,w)=(0,0)$. By looking at the linear part of \eqref{eqn:2_6_star}, we see that $P$ is a smooth point with tangent $w = 0$. By the fact above, $\ord_p(t)=\ord_p(t-w)=\ord_p(t-\lambda w)=1$. Thus \eqref{eqn:2_6_star} implies that $\ord_p(w) = 3$. Then
     \begin{gather*}
-        \ord_p(x) = \ord_p\left(\frac{X}{Z}\right) = \ord_p\left(\frac{t}{w}\right) = 1-3 = 2\\
+        \ord_p(x) = \ord_p\left(\frac{X}{Z}\right) = \ord_p\left(\frac{t}{w}\right) = 1-3 = -2\\
         \ord_p(y) = \ord_p\left(\frac{Y}{Z}\right) = \ord_p\left(\frac{1}{w}\right) = -3
     \end{gather*}
 \end{example}
