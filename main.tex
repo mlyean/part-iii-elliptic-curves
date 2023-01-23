@@ -16,10 +16,13 @@
 \usepackage{tikz-cd}
 \usepackage{titlesec}
 
+\usetikzlibrary{shapes,calc,arrows,through,intersections}
+
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
 \newtheorem*{definition*}{Definition}
-\newtheorem*{example}{Example}
+\newtheorem{example}[definition]{Example}
+\newtheorem*{example*}{Example}
 \newtheorem*{exercise}{Exercise}
 \newtheorem*{fact}{Fact}
 
@@ -30,7 +33,7 @@
 \newtheorem{corollary}[definition]{Corollary}
 
 \theoremstyle{remark}
-\newtheorem*{remark}{Remark}
+\newtheorem{remark}[definition]{Remark}
 
 \renewcommand{\qedsymbol}{$\blacksquare$}
 
@@ -38,6 +41,11 @@
 \DeclareMathOperator{\Gal}{Gal}
 \DeclareMathOperator{\id}{id}
 \DeclareMathOperator{\area}{area}
+\DeclareMathOperator{\ord}{ord}
+\DeclareMathOperator{\Frac}{Frac}
+\let\div\undefined
+\DeclareMathOperator{\div}{div}
+\DeclareMathOperator{\Div}{Div}
 
 \newcommand{\FF}{\mathbb{F}}
 \newcommand{\NN}{\mathbb{N}}
@@ -46,9 +54,11 @@
 \newcommand{\RR}{\mathbb{R}}
 \newcommand{\CC}{\mathbb{C}}
 \newcommand{\PP}{\mathbb{P}}
+\newcommand{\bA}{\mathbb{A}}
 \newcommand{\cD}{\mathcal{D}}
 \newcommand{\cO}{\mathcal{O}}
 \newcommand{\cP}{\mathcal{P}}
+\newcommand{\cL}{\mathcal{L}}
 \newcommand{\fp}{\mathfrak{p}}
 \newcommand{\fq}{\mathfrak{q}}
 \newcommand{\fm}{\mathfrak{m}}
@@ -111,9 +121,9 @@ We have $a^2 + b^2 = c^2$, and $\area(\Delta) = \frac{1}{2} a b$.
 
 \noindent To find all congruent numbers, it suffices to consider $D \in \ZZ_{>0}$ squarefree.
 
-\begin{example}
+\begin{example*}
     $D = 5, 6$ are congruent numbers.
-\end{example}
+\end{example*}
 
 \begin{lemma}\label{lem:1_2}
     $D \in \QQ_{> 0}$ is a congruent number if and only if $D y^2 = x^3 - x$ for some $x, y \in \QQ$ with $y \neq 0$.
@@ -164,9 +174,9 @@ Now we will see a variant of this for polynomials. In this section , we let $K$ 
     \begin{enumerate}
         \item An \emph{elliptic curve} $E/K$ is the projective closure of the plane affine curve
             \begin{equation}\label{eqn:weierstrass_eqn}
-                Y^2 = f(X)
+                y^2 = f(x)
             \end{equation}
-            where $f \in K[X]$ is a monic cubic polynomial with distinct roots in $\overline{K}$. \eqref{eqn:weierstrass_eqn} is called a \emph{Weierstrass equation}.
+            where $f \in K[x]$ is a monic cubic polynomial with distinct roots in $\overline{K}$. \eqref{eqn:weierstrass_eqn} is called a \emph{Weierstrass equation}.
 
         \item For $L/K$ a field extension, set $E(L) = \{(x, y) \in L \mid y^2 = f(x)\} \cup \{0\}$, where $0$ denotes the point at infinity.
     \end{enumerate}
@@ -178,6 +188,134 @@ Now we will see a variant of this for polynomials. In this section , we let $K$ 
 
 In this course we will study $E(K)$ for $K$ a finite field, local field ($[K : \QQ_p] < \infty$), and number field.
 
-\autoref{lem:1_2} and \autoref{thm:1_3} imply that for $E : Y^2 = X^3 - X$, we have $E(\QQ) = \{0, (0, 0), (\pm 1, 0)\}$. As we will see, this is a group isomorphic to $C_2 \times C_2$.
+\autoref{lem:1_2} and \autoref{thm:1_3} imply that for $E : y^2 = x^3 - x$, we have $E(\QQ) = \{0, (0, 0), (\pm 1, 0)\}$. As we will see, this is a group isomorphic to $C_2 \times C_2$.
+
+\begin{corollary}\label{cor:1_6}
+    Let $E/K$ be an elliptic curve. Then $E(K(t)) = E(K)$.
+\end{corollary}
+\begin{proof}
+    WLOG $K = \overline{K}$ is algebraically closed. By a change of coordinates, we may assume that
+    \begin{equation*}
+        E : y^2 = x(x-1)(x-\lambda)
+    \end{equation*}
+    for some $\lambda \in K \setminus \{0, 1\}$
+
+    Suppose that $(x, y) \in E(K(t))$. Write $x = \frac{u}{v}$, where $u, v \in K[t]$ are coprime. Then $w^2 = uv(u-v)(u-\lambda v)$ for some $w \in K[t]$. Unique factorisation in $K[t]$ implies that $u, v, u-v, u-\lambda v$ are all squares.\footnote{we can absorb constants since $K$ is algebraically closed} \autoref{lem:1_4} then implies that $u, v \in K$, so $x, y \in K$.
+\end{proof}
+
+\section{Some Remarks on Algebraic Curves}
+
+In this section we will work over an algebraically closed field $K = \overline{K}$.
+
+\begin{definition}\label{def:2_1}
+    A plane curve $C = \{f(x, y) = 0\} \subseteq \bA^2$ (with $f \in K[x, y]$ irreducible) is \emph{rational} if it has a \emph{rational parameterisation}, i.e. there exists $\phi, \psi \in K(t)$ such that
+    \begin{enumerate}
+        \item The map $\bA^2 \to \bA^2$ defined by $t \mapsto (\phi(t), \psi(t))$ is injective on $\bA^1 \setminus \{\text{finite set}\}$.
+        \item $f(\phi(t), \psi(t)) = 0$.
+    \end{enumerate}
+\end{definition}
+
+\begin{example}\label{eg:2_2}\phantom{}
+    \begin{enumerate}[label=(\alph*)]
+        \item Any nonsingular plane conic is rational. We illustrate the proof of this with the unit circle:
+            \begin{figure}[htpb]
+            \begin{center}
+            \begin{tikzpicture}
+                \coordinate (A) at (-2,0);
+                \coordinate (B) at ({2*cos(50)}, {2*sin(50)});
+
+                \draw[name path=Circle] (0,0) circle (2);
+                \draw[->] (-3,0) -- (3,0) node[below] {$x$};
+                \draw[->] (0,-3) -- (0,3) node[left] {$y$};
+                \draw[shorten >= -1.5cm, shorten <= -1cm, name path=Line] (A) -- (B);
+
+                \filldraw[black] (A) circle (2pt) node[above left] {$(-1, 0)$} (B) circle (2pt);
+                \node at (-2, -2) {$x^2+y^2=1$};
+                \node at (3.2, 1.7) {$y=t(x+1)$};
+            \end{tikzpicture}
+            \end{center}
+            \caption{Illustration of the proof that the unit circle is rational}%
+            \label{fig:1}
+            \end{figure}
+            We choose a point on the conic, here we take $(-1, 0)$. Then draw a line of slope $t$ through the point, $y = t(x+1)$. Solving for the other intersection point, we have $x^2 + t^2 (x+1)^2$, which implies $(x+1)(x-1+t^2(x+1)) = 0$. Thus $(x, y) = (\frac{1-t^2}{1+t^2}, \frac{2t}{1+t^2})$ gives a rational parameterisation.
+
+        \item Any singular plane cubic is rational. We apply the same procedure as before, but we choose the singular point instead of an arbitrary point. %TODO: continue
+
+        \item \autoref{cor:1_6} shows that elliptic curves are not rational.
+    \end{enumerate}
+\end{example}
+
+\begin{remark}\label{rem:2_3}
+    The genus $g(C) \in \ZZ_{\ge 0}$ is an invariant of a smooth projective curve $C$.
+    \begin{enumerate}
+        \item If $K = \CC$, then $g(C)$ is the genus of the Riemann surface.
+        \item A smooth plane curve $C \subseteq \PP^2$ of degree $d$ has genus $g(C) = \frac{(d-1)(d-2)}{2}$.
+    \end{enumerate}
+\end{remark}
+
+\begin{proposition}\label{prop:2_4}
+    Let $C$ be a smooth projective curve.
+    \begin{enumerate}
+        \item $C$ is rational (see \autoref{def:2_1}) iff $g(C) = 0$;
+        \item $C$ is an elliptic curve (see \autoref{def:1_5}) iff $g(C) = 1$.
+    \end{enumerate}
+\end{proposition}
+\begin{proof}\phantom{}
+    \begin{enumerate}
+        \item Omitted.
+
+        \item ($\Rightarrow$) See Example Sheet and \autoref{rem:2_3}.
+
+            ($\Leftarrow$) We will see this later. \qedhere
+    \end{enumerate}
+\end{proof}
+
+\subsection*{Order of Vanishing}
+
+Let $C$ be an algebraic curve, $K(C)$ its function field, and $P \in C$ a smooth point. We write $\ord_p(f)$ for the order of vanishing of $f \in K(C)$ at $P$. This is negative if $f$ has a pole at $P$.
+
+\begin{fact}
+    $\ord_p : K(C)^\times \to \ZZ$ is a discrete valuation, i.e. $\ord_p(f_1 f_2) = \ord_p(f_1) \ord_p(f_2)$, and $\ord_p(f_1 + f_2) \ge \min(\ord_p(f_1), \ord_p(f_2))$.
+\end{fact}
+
+\begin{definition*}
+    $t \in K(C)^\times$ is a \emph{uniformiser} at $P$ if $\ord_p(t) = 1$.
+\end{definition*}
+
+\begin{example}\label{eg:2_5}
+    Let $C = \{g = 0\} \subseteq \bA^2$, with $g \in k[x,y]$ irreducible. Then $K(C) = \Frac \frac{k[x,y]}{(g)}$. Write $g = g_0 + g_1(x,y) + g_2(x,y) + \ldots$, where $g_i$ is homogeneous of degree $i$. Suppose that $P = (0, 0) \in C$ is a smooth point, i.e. $g_0 = 0$, and $g_1(x,y) = \alpha x + \beta y$ with $\alpha, \beta$ not both zero.
+
+    Let $\gamma, \delta \in K$. Then
+
+    \begin{fact}
+        $\gamma x + \delta y \in K(C)$ is a uniformiser at $P$ iff $\alpha \delta - \beta \gamma \neq 0$.
+    \end{fact}
+\end{example}
+
+\begin{example}\label{eg:2_6}
+    Consider the curve $C = \{y^2 = x(x-1)(x-\lambda)\} \subseteq \bA^2$ with $\lambda \neq 0, 1$. Setting $x=X/Z, y=Y/Z$, we get its projective closure $\overline{C} = \{Y^2 Z = X (X-Z) (X-\lambda Z)\} \subseteq \PP^2$. Let $P = (0 : 1 : 0) \in \overline{C}$. Let's compute $\ord_P(x)$ and $\ord_P(y)$.
+
+    Set $t=X/Y, w=Z/Y$. The curve becomes
+    \begin{equation}\label{eqn:2_6_star}
+        w = t(t-w)(t-\lambda w)
+    \end{equation}
+    and $P$ is the point $(t,w)=(0,0)$. By looking at the linear part of \eqref{eqn:2_6_star}, we see that $P$ is a smooth point with tangent $w = 0$. By the fact above, $\ord_p(t)=\ord_p(t-w)=\ord_p(t-\lambda w)=1$. Thus \eqref{eqn:2_6_star} implies that $\ord_p(w) = 3$. Then
+    \begin{gather*}
+        \ord_p(x) = \ord_p\left(\frac{X}{Z}\right) = \ord_p\left(\frac{t}{w}\right) = 1-3 = 2\\
+        \ord_p(y) = \ord_p\left(\frac{Y}{Z}\right) = \ord_p\left(\frac{1}{w}\right) = -3
+    \end{gather*}
+\end{example}
+
+\subsection{Riemann Roch Spaces}
+
+Let $C$ be a smooth projective curve.
+
+\begin{definition*}
+    A divisor is a formal sum of points on $C$, say $C = \sum_{p \in C} n_P P$, with $n_P \in \ZZ$, and $n_P = 0$ for all but finitely many $P \in C$. We define $\deg D = \sum_{P \in C} n_P$. $D$ is called \emph{effective} (written $D \ge 0$) if $n_P \ge 0$ for all $P \in C$. If $f \in K(C)^\times$, then define\footnote{$f$ has only finitely many zeros and poles} $\div(f) = \sum_{P \in C} \ord_P(f) P$. The \emph{Riemann Roch space} of $D \in \Div(C)$ is
+    \begin{equation*}
+        \cL(D) = \{f \in K(C)^\times \mid \div(f) + D \ge 0\} \cup \{0\}
+    \end{equation*}
+    i.e. the $K$-vector space of rational functions on $C$ with ``poles no worst than specified by $D$''.
+\end{definition*}
 
 \end{document}
