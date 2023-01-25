@@ -19,6 +19,7 @@
 \usepackage{titlesec}
 
 \usetikzlibrary{shapes,calc,arrows,through,intersections}
+\pgfplotsset{compat=1.18}
 
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
@@ -36,6 +37,7 @@
 
 \theoremstyle{remark}
 \newtheorem{remark}[definition]{Remark}
+\newtheorem*{remark*}{Remark}
 
 \renewcommand{\qedsymbol}{$\blacksquare$}
 
@@ -58,12 +60,7 @@
 \newcommand{\PP}{\mathbb{P}}
 \newcommand{\bA}{\mathbb{A}}
 \newcommand{\cD}{\mathcal{D}}
-\newcommand{\cO}{\mathcal{O}}
-\newcommand{\cP}{\mathcal{P}}
 \newcommand{\cL}{\mathcal{L}}
-\newcommand{\fp}{\mathfrak{p}}
-\newcommand{\fq}{\mathfrak{q}}
-\newcommand{\fm}{\mathfrak{m}}
 
 \setlist[enumerate,1]{label=(\roman*), nosep}
 \setlist[itemize,1]{nosep}
@@ -326,14 +323,14 @@ In this section we will work over an algebraically closed field $K = \overline{K
 
 \subsection*{Order of Vanishing}
 
-Let $C$ be an algebraic curve, $K(C)$ its function field, and $P \in C$ a smooth point. We write $\ord_p(f)$ for the order of vanishing of $f \in K(C)$ at $P$. This is negative if $f$ has a pole at $P$.
+Let $C$ be an algebraic curve, $K(C)$ its function field, and $P \in C$ a smooth point. We write $\ord_P(f)$ for the order of vanishing of $f \in K(C)$ at $P$. This is negative if $f$ has a pole at $P$.
 
 \begin{fact}
-    $\ord_p : K(C)^\times \to \ZZ$ is a discrete valuation, i.e. $\ord_p(f_1 f_2) = \ord_p(f_1) \ord_p(f_2)$, and $\ord_p(f_1 + f_2) \ge \min(\ord_p(f_1), \ord_p(f_2))$.
+    $\ord_P : K(C)^\times \to \ZZ$ is a discrete valuation, i.e. $\ord_P(f_1 f_2) = \ord_P(f_1) \ord_P(f_2)$, and $\ord_P(f_1 + f_2) \ge \min(\ord_P(f_1), \ord_P(f_2))$.
 \end{fact}
 
 \begin{definition*}
-    $t \in K(C)^\times$ is a \emph{uniformiser} at $P$ if $\ord_p(t) = 1$.
+    $t \in K(C)^\times$ is a \emph{uniformiser} at $P$ if $\ord_P(t) = 1$.
 \end{definition*}
 
 \begin{example}\label{eg:2_5}
@@ -364,23 +361,146 @@ Let $C$ be an algebraic curve, $K(C)$ its function field, and $P \in C$ a smooth
     \begin{equation}\label{eqn:2_6_star}
         w = t(t-w)(t-\lambda w)
     \end{equation}
-    and $P$ is the point $(t,w)=(0,0)$. By looking at the linear part of \eqref{eqn:2_6_star}, we see that $P$ is a smooth point with tangent $w = 0$. By the fact above, $\ord_p(t)=\ord_p(t-w)=\ord_p(t-\lambda w)=1$. Thus \eqref{eqn:2_6_star} implies that $\ord_p(w) = 3$. Then
+    and $P$ is the point $(t,w)=(0,0)$. By looking at the linear part of \eqref{eqn:2_6_star}, we see that $P$ is a smooth point with tangent $w = 0$. By the fact above, $\ord_P(t)=\ord_P(t-w)=\ord_P(t-\lambda w)=1$. Thus \eqref{eqn:2_6_star} implies that $\ord_P(w) = 3$. Then
     \begin{gather*}
-        \ord_p(x) = \ord_p\left(\frac{X}{Z}\right) = \ord_p\left(\frac{t}{w}\right) = 1-3 = -2\\
-        \ord_p(y) = \ord_p\left(\frac{Y}{Z}\right) = \ord_p\left(\frac{1}{w}\right) = -3
+        \ord_P(x) = \ord_P\left(\frac{X}{Z}\right) = \ord_P\left(\frac{t}{w}\right) = 1-3 = -2\\
+        \ord_P(y) = \ord_P\left(\frac{Y}{Z}\right) = \ord_P\left(\frac{1}{w}\right) = -3
     \end{gather*}
 \end{example}
 
-\subsection{Riemann Roch Spaces}
+\subsection*{Riemann-Roch Spaces}
 
 Let $C$ be a smooth projective curve.
 
 \begin{definition*}
-    A divisor is a formal sum of points on $C$, say $C = \sum_{p \in C} n_P P$, with $n_P \in \ZZ$, and $n_P = 0$ for all but finitely many $P \in C$. We define $\deg D = \sum_{P \in C} n_P$. $D$ is called \emph{effective} (written $D \ge 0$) if $n_P \ge 0$ for all $P \in C$. If $f \in K(C)^\times$, then define\footnote{$f$ has only finitely many zeros and poles} $\div(f) = \sum_{P \in C} \ord_P(f) P$. The \emph{Riemann Roch space} of $D \in \Div(C)$ is
+    A \emph{divisor} is a formal sum of points on $C$, say $C = \sum_{p \in C} n_P P$, with $n_P \in \ZZ$, and $n_P = 0$ for all but finitely many $P \in C$. We let $\Div(C)$ denote the set of divisors. We define $\deg D = \sum_{P \in C} n_P$. $D$ is called \emph{effective} (written $D \ge 0$) if $n_P \ge 0$ for all $P \in C$. If $f \in K(C)^\times$, then define\footnote{$f$ has only finitely many zeros and poles} $\div(f) = \sum_{P \in C} \ord_P(f) P$. The \emph{Riemann-Roch space} of $D \in \Div(C)$ is
     \begin{equation*}
         \cL(D) = \{f \in K(C)^\times \mid \div(f) + D \ge 0\} \cup \{0\}
     \end{equation*}
     i.e. the $K$-vector space of rational functions on $C$ with ``poles no worst than specified by $D$''.
 \end{definition*}
+
+We quote the Riemann-Roch Theorem for genus $1$ curves:
+\begin{equation*}
+    \dim \cL(D) =
+    \begin{cases}
+        \deg D &\text{if } \deg D > 0\\
+        0 \text{ or } 1 &\text{if } \deg D = 0\\
+        0 &\text{if } \deg D < 0
+    \end{cases}
+\end{equation*}
+
+\autoref{eg:2_6} shows that $E : y^2 = f(x)$ and $P$ is the point at infinity, then $\cL(2P) = \langle 1,x \rangle$, and $\cL(3P) = \langle 1,x,y \rangle$.
+
+\begin{proposition}\label{prop:2_7}
+    Let $C$ be a smooth plane cubic and $P \in C$ a point of inflection. Then we may change coordinates such that
+    \begin{equation*}
+        C : Y^2 Z = X (X-Z) (X-\lambda Z)
+    \end{equation*}
+    for some $\lambda \neq 0, 1$, such that $P = (0:1:0)$.
+\end{proposition}
+\begin{proof}
+    We choose coordinates such that $P = (0:1:0)$ and the tangent line to $C$ at $p$ is $T_p(C) = \{z=0\}$. Write $C = \{F(X,Y,Z) = 0\} \subseteq \PP^2$, where $F$ is a homogeneous cubic polynomial.
+
+    Since $P \in C$ is a point of inflection, $F(t,1,0) = \text{const} \cdot t^3$, hence $F$ has no terms $X^2Y, XY^2, Y^3$, so
+    \begin{equation*}
+        F \in \langle Y^2Z, XYZ, YZ^2, X^3, X^2Z, XZ^2, Z^3 \rangle
+    \end{equation*}
+    The coefficient of $Y^2 Z$ is nonzero, otherwise $P \in C$ is a singular point\footnote{by considering the tangent line}. The coefficient of $X^3$ is nonzero, otherwise $\{z = 0\} \subseteq C$. Moreover, we are free to rescale $X,Y,Z$ and $F$. WLOG $C$ is defined by
+    \begin{equation}\label{eqn:weierstrass_form}
+        C : Y^2 Z + a_1 XYZ + a_3 Y Z^2 = X^3 + a_2 X^2 Z + a_4 X Z^2 + a_6 Z^3
+    \end{equation}
+    Substituting\footnote{completing the square} $Y \leftarrow Y - \frac{1}{2} a_1 X - \frac{1}{2} a_3 Z$, we may assume $a_1 = a_3 = 0$. Now $C : Y^2 Z = Z^3 f(\frac{X}{Z})$ for some monic cubic polynomial $f$. Since $C$ is smooth, $f$ has distinct roots. By changing coordinates, we may assume the roots are $0, 1, \lambda$. Then
+    \begin{equation}\label{eqn:legendre_form}
+        C : Y^2 Z = X(X-Z)(X-\lambda Z)
+    \end{equation}
+    as required.
+\end{proof}
+\noindent\eqref{eqn:weierstrass_form} is known as a \emph{Weierstrass form} and \eqref{eqn:legendre_form} a Legendre form.
+
+\begin{remark*}
+    It may be shown that the points of inflection on $C = \{F(X_1, X_2, X_3) = 0\} \subseteq \PP^2$ are given by
+    \begin{equation*}
+        F = \det \bigg(\md{F}{2}{X_i}{}{X_j}{}\bigg) = 0
+    \end{equation*}
+\end{remark*}
+
+\subsection*{The Degree of a Morphism}
+
+Let $\phi : C_1 \to C_2$ be a nonconstant morphism of smooth projective curves. Then define $\phi^* : K(C_2) \hookrightarrow K(C_1)$ by $f \mapsto f \circ \phi$. This is an inclusion of fields. We have the tower of fields
+\begin{equation*}
+\begin{tikzcd}
+    K(C_1) \arrow[d, dash]\\
+    \phi^*(K(C_2))
+\end{tikzcd}
+\end{equation*}
+we will omit $\phi^*$ if it is clear from the context.
+
+\begin{definition*}\phantom{}
+    \begin{enumerate}
+        \item $\deg \psi = [K(C_1) : \phi^*(K(C_2))]$.
+        \item $\phi$ is \emph{separable} if $K(C_1)/\phi^*(K(C_2))$ is a separable field extension.
+    \end{enumerate}
+\end{definition*}
+
+\begin{definition*}
+    Suppose $P \in C_1$, $Q = \phi(P) \in C_2$. Let $t \in K(C_2)$ be a uniformiser at $Q$. We define $e_\phi(P) = \ord_P(\phi^*(t))$. This is always at least $1$, and is independent of the choice of $t$.
+\end{definition*}
+
+\begin{theorem}\label{thm:2_8}
+    Let $\phi : C_1 \to C_2$ be a nonconstant morphism of smooth projective curves. Then
+    \begin{equation*}
+        \sum_{P \in \phi^{-1}(Q)} e_\phi(P) = \deg \phi
+    \end{equation*}
+    for all $Q \in C_2$. Moreover if $\phi$ is separable, then $e_\phi(P) = 1$ for all but finitely many $P \in C_1$. In particular,
+    \begin{enumerate}
+        \item $\phi$ is surjective (on $\overline{K}$-points);
+        \item $\# \phi^{-1}(Q) \le \deg \phi$;
+        \item If $\phi$ is separable, then equality holds in (ii) for all but finitely many $Q \in C_2$.
+    \end{enumerate}
+\end{theorem}
+
+\begin{remark}\label{rem:2_9}
+    Let $C$ be an algebraic curve. A rational map is given by
+    \begin{alignat*}{3}
+        \phi : C &\dashrightarrow\,\,&& \PP^n\\
+        P &\longmapsto&& (f_0(P) : f_1(P) : \ldots f_n(P))
+    \end{alignat*}
+    where $f_0, f_1, \ldots, f_n \in K(C)$ are not all zero.
+\end{remark}
+\begin{fact}
+    If $C$ is smooth, then $\phi$ is a morphism.
+\end{fact}
+
+\section{Weierstrass Equations}
+
+In this section we will assume that $K$ is a perfect field with algebraic closure $\overline{K}$.
+
+\begin{definition*}
+    An \emph{elliptic curve} $E/K$ is a smooth projective curve of genus $1$ defined over $K$, with a specified $K$-rational point $O_E$.
+\end{definition*}
+
+\begin{theorem}\label{thm:3_1}
+    Every elliptic curve $E$ is isomorphic over $K$ to a curve in Weierstrass form via an isomorphism taking $O_E$ to $(0:1:0)$.
+\end{theorem}
+
+\begin{remark*}
+    \autoref{prop:2_7} treated the special case $E$ is a smooth plane cubic and $O_E$ is a point of inflection.
+\end{remark*}
+
+\begin{fact}
+    If $D \in \Div(K)$ is defined over $K$ (i.e. fixed by $\Gal(\overline{K}/K)$), then $\cL(D)$ has a basis in $K(E)$, not just $\overline{K}(E)$.
+\end{fact}
+
+\begin{proof}[Proof of \autoref{thm:3_1}]
+    $\dim \cL(2 \cdot O_E) = 2$ by the Riemann-Roch theorem, and $1 \in \cL(2 \cdot O_E)$, so we can extend it to a basis $1, x$ of $\cL(2 \cdot O_E)$. We have $\ord_{O_E}(x) = -2$, otherwise $1, x \in \cL(1 \cdot O_E)$. Then we extend it to a basis $1,x,y$ of $\cL(3 \cdot O_E)$, and similarly as before, $\ord_{O_E}(y) = -3$.
+
+    The $7$ elements $1,x,y,x^2,xy,x^3,y^2$ lie in the $6$-dimensional vector space $\cL(6 \cdot O_E)$, so they satisfy a dependence relation. Leaving out $x^3$ or $y^2$ gives a basis of $\cL(6 \cdot O_E)$, since each term has a different order of pole at $O_E$. Thus the coefficients of $x^3$ and $y^2$ in the relation are non-zero. Rescaling $x$ and $y$, we get
+    \begin{equation*}
+        E' : y^2 + a_1xy + a_3 y = x^3 + a_2x^2 + a_4x + a_6
+    \end{equation*}
+    for some $a_i \in K$.
+    % To be continued
+\end{proof}
 
 \end{document}
