@@ -50,6 +50,7 @@
 \let\div\undefined
 \DeclareMathOperator{\div}{div}
 \DeclareMathOperator{\Div}{Div}
+\DeclareMathOperator{\Pic}{Pic}
 
 \newcommand{\FF}{\mathbb{F}}
 \newcommand{\NN}{\mathbb{N}}
@@ -77,9 +78,9 @@
 
 \noindent These lecture notes were based on the Part III course Elliptic Curves taught during Lent 2023 by Professor Tom Fisher.
 
-% \tableofcontents
+\tableofcontents
 
-% \newcommand{\sectionbreak}{\clearpage}
+\newcommand{\sectionbreak}{\clearpage}
 
 \section{Fermat's Method of Infinite Descent}
 
@@ -499,8 +500,177 @@ In this section we will assume that $K$ is a perfect field with algebraic closur
     \begin{equation*}
         E' : y^2 + a_1xy + a_3 y = x^3 + a_2x^2 + a_4x + a_6
     \end{equation*}
-    for some $a_i \in K$.
-    % To be continued
+    for some $a_i \in K$. Let $E'$ be the curve defined by this equation (or rather its projective closure). There is a morphism\footnote{recall that any rational map from a smooth curve is a morphism}
+    \begin{alignat*}{3}
+        \phi : E &\longrightarrow\,\,&& E'\\
+        P &\longmapsto&& (x(P) : y(P) : 1)\\
+        & &&= \left(\frac{x}{y}(P) : 1 : \frac{1}{y}(P)\right)\\
+        O_E &\longmapsto&& (0 : 1 : 0)
+    \end{alignat*}
+    We have $\deg \phi = [K(E) : \phi^*(K(E))] = [K(E) : K(x,y)]$.
+    \begin{equation*}
+        \begin{tikzcd}[column sep=small]
+        & K(E) \arrow[d, equal] \arrow[ddl, dash, bend right, "2"'] \arrow[ddr, dash, bend left, "3"] &\\
+        & K(x,y) \arrow[dl, dash] \arrow[dr, dash] &\\
+        K(x) & & K(y)
+    \end{tikzcd}
+    \end{equation*}
+    Since $x$ was chosen to have a pole of order $2$ at $O_E$ and no other poles, by considering the fibre at $\infty$, we have
+    \begin{equation*}
+        [K(E) : K(x)] = \deg(E \xrightarrow{x} \PP^1) = \ord_P\left(\frac{1}{x}\right) = 2
+    \end{equation*}
+    Similarly,
+    \begin{equation*}
+        [K(E) : K(y)] = \deg(E \xrightarrow{y} \PP^1) = \ord_P\left(\frac{1}{y}\right) = 3
+    \end{equation*}
+    The tower law implies $\deg \phi = [K(E) : K(x,y)] = 1$. Thus $\phi$ is birational. If $E'$ is singular, then $E$ and $E'$ would be rational, contradiction. Thus $E'$ is smooth, so $\phi^{-1}$ is a morphism. Thus $\phi$ is an isomorphism.
+\end{proof}
+
+We say that two elliptic curves are \emph{isomorphic} if they are isomorphic as projective curves with the isomorphism taking specified point to specified point.
+
+\begin{proposition}\label{prop_3_2}
+    Let $E, E'$ be elliptic curves over $K$ in Weierstrass form. Then $E \cong E'$ over $K$ iff the equations are related by a change of variables
+    \begin{align*}
+        x &= u^2 x' + r\\
+        y &= u^3 y' + u^2 s x' + t
+    \end{align*}
+    for some $u,r,s,t \in K$, $u \neq 0$.
+\end{proposition}
+\begin{proof}
+    We have $\langle 1,x \rangle = \cL(2 \cdot O_E) = \langle 1, x' \rangle$ implies that $x = \lambda x' + r$ for some $\lambda, r \in K$, $\lambda \neq 0$. Similarly, $\langle 1,x,y \rangle = \cL(3 \cdot O_E) = \langle 1,x',y' \rangle$ implies $y = \mu y' + \sigma x' + t$ for some $\mu, \sigma, t \in K$, $\mu \neq 0$. Looking at the coefficients of $x^3$ and $y^2$, we see that $\mu^2 = \lambda^3$, so $\lambda = u^2$ and $\mu = u^3$ for some $u \neq 0$. Set $s = \frac{\sigma}{u^2}$
+\end{proof}
+
+A Weierstrass equation defines an elliptic curve iff\footnote{for the converse, recall that smooth plane cubics have genus $1$, and we have the specified point $(0:1:0)$} it defines a smooth curve iff $\Delta(a_1, a_2, a_3, a_4, a_6) \neq 0$, where $\Delta \in \ZZ[a_1, a_2, a_3, a_4, a_6]$ is a certain polynomial known as the discriminant. If $\Char K \neq 2, 3$, we can reduce to the case
+\begin{equation*}
+    E : y^2 = x^3 + a x + b
+\end{equation*}
+which has discriminant $\Delta = -16(4a^3 + 27b^2)$.
+
+\begin{corollary}
+    Assume $\Char K \neq 2, 3$. The elliptic curves
+    \begin{gather*}
+        E : y^2 = x^3 + ax + b\\
+        E' : y^2 = x^3 + a'x + b'
+    \end{gather*}
+    are isomorphic over $K$ iff $(a',b') = (u^4 a, u^6 b)$ for some $u \in K^\times$.
+\end{corollary}
+\begin{proof}
+    $E$ and $E'$ are related by a substitution as in \autoref{prop_3_2} with $r = s = t = 0$ (simply substitute and expand, using that $a_1 = a_2 = a_3 = 0$).
+\end{proof}
+
+\begin{definition*}
+    The \emph{$j$-invariant} of $E$ is
+    \begin{equation*}
+        j(E) = \frac{1728(4a^3)}{4a^3 + 27 b^2}
+    \end{equation*}
+\end{definition*}
+
+\begin{corollary}\label{cor:3_4}
+    If $E \cong E'$, then $j(E) = j(E')$. If $K = \overline{K}$, then the converse holds.
+\end{corollary}
+\begin{proof}
+    We assume $\Char K \neq 2,3$. Then
+    \begin{align*}
+        E \cong E'
+        \iff& (a', b') = (u^4 a, u^6 b) \text{ for some } u \in K^\times\\
+        \implies& (a^3 : b^2) = ((a')^3 : (b')^2)\\
+        \iff& j(E) = j(E')
+    \end{align*}
+    and the converse holds if $K = \overline{K}$.
+\end{proof}
+
+\section{The Group Law}
+
+Let $E \subseteq \PP^2$ be a smooth plane cubic\footnote{$E = E(\overline{K})$}. Let $P, Q \in E$. $E$ meets any line in $3$ points counted with multiplicity. Set $S$ to be the third point of intersection of $E$ and $PQ$, and $R$ the third point of intersection of $E$ and $O_E S$. Define $P \oplus Q = R$. If $P = Q$, we take $T_P E$ instead of $PQ$, etc. This is called ``the chords and tangent process.''
+
+\begin{figure}[H]
+\centering
+\scalebox{0.8}{
+\begin{tikzpicture}[scale=1, transform shape]
+    \draw[rotate=75, name path=cubic] plot[variable=\t,domain=-3.6:3.6,smooth,samples=51] ({\t/2}, {\t^3/8 - \t});
+    \draw[name path=line1] (-1,2.5) -- (1,-2.5);
+    \draw[name path=line2] (0.7,2) -- (-0.7,-2);
+    \fill [name intersections={of=cubic and line1,by={r,s,o}}] (r) circle[radius=2pt] node[above right] {$R$} (s) circle[radius=2pt] node[below right] {$S$} (o) circle[radius=2pt] node[above right] {$O_E$};
+    \fill [name intersections={of=cubic and line2,by={p,s,q}}] (p) circle[radius=2pt] node[below left] {$P$} (q) circle[radius=2pt] node[above right] {$Q$};
+\end{tikzpicture}}
+\end{figure}
+
+\begin{theorem}\label{thm:4_1}
+    $(E, \oplus)$ is an abelian group.
+\end{theorem}
+\begin{proof}\phantom{}
+    \begin{enumerate}
+        \item $\oplus$ is commutative as the order of $P$ and $Q$ did not matter in the construction.
+
+        \item $O_E$ is the identity: Applying the construction, we see that $O_E \oplus P = P$.
+            \begin{figure}[H]
+            \centering
+            \scalebox{0.8}{
+            \begin{tikzpicture}[scale=1, transform shape]
+                \draw[rotate=75, name path=cubic] plot[variable=\t,domain=-3.6:3.6,smooth,samples=51] ({\t/2}, {\t^3/8 - \t});
+                \draw[name path=line2] (0.7,2) -- (-0.7,-2);
+                \fill [name intersections={of=cubic and line2,by={o,p,s}}] (o) circle[radius=2pt] node[below left] {$O_E$} (p) circle[radius=2pt] node[above left] {$P$} (s) circle[radius=2pt] node[above right] {$S$};
+            \end{tikzpicture}}
+            \end{figure}
+
+        \item Inverses: %TODO: Later
+
+        \item Associativity: This is much harder.
+    \end{enumerate}
+    \renewcommand{\qedsymbol}{}
+\end{proof}
+
+\begin{definition*}
+    $D_1, D_2 \in \Div(E)$ are \emph{linearly equivalent} if there exists $f \in \overline{K}(E)$ such that $\div(f) = D_1 - D_2$. In this case, we write $D_1 \sim D_2$ and $[D] = \{D' \mid D \sim D'\}$.
+\end{definition*}
+
+\begin{definition*}
+    The \emph{Picard group} is $\Pic(E) = \Div(E)/\sim$ and $\Pic^0(E) = \Div^0(E)/\sim$, where $\Div^0(E) = \{D \in \Div(E) \mid \deg D = 0\}$.
+\end{definition*}
+
+We define
+\begin{alignat*}{3}
+    \psi : E &\longrightarrow\,\,&& \Pic^0(E)\\
+    P &\longmapsto&& [(P) - (O_E)]
+\end{alignat*}
+
+\begin{proposition}\label{prop:4_2}\phantom{}
+    \begin{enumerate}
+        \item $\psi(P \oplus Q) = \psi(P) + \psi(Q)$;
+        \item $\psi$ is a bijection.
+    \end{enumerate}
+\end{proposition}
+
+\begin{proof}\phantom{}
+    \begin{enumerate}
+        \item Let $l, m \in K(E)$ be as shown below:
+            \begin{figure}[H]
+            \centering
+            \scalebox{0.8}{
+            \begin{tikzpicture}[scale=1, transform shape]
+                \draw[rotate=75, name path=cubic] plot[variable=\t,domain=-3.6:3.6,smooth,samples=51] ({\t/2}, {\t^3/8 - \t});
+                \draw[name path=line1] (-1,2.5) -- (1,-2.5) node[below] {$m = 0$};
+                \draw[name path=line2] (0.7,2) -- (-0.7,-2) node[below] {$l = 0$};
+                \fill [name intersections={of=cubic and line1,by={r,s,o}}] (r) circle[radius=2pt] node[above right] {$R$} (s) circle[radius=2pt] node[below right] {$S$} (o) circle[radius=2pt] node[above right] {$O_E$};
+                \fill [name intersections={of=cubic and line2,by={p,s,q}}] (p) circle[radius=2pt] node[below left] {$P$} (q) circle[radius=2pt] node[above right] {$Q$};
+            \end{tikzpicture}}
+            \end{figure}
+            Then
+            \begin{align*}
+                \div(l/m)
+                &= (P) + (S) + (Q) - (O_E) - (S) - (R)\\
+                &= (P) + (Q) - (O_E) - (P \oplus Q)
+            \end{align*}
+            Thus
+            \begin{gather*}
+                (P) + (Q) \sim (P \oplus Q) + (O_E)\\
+                (P \oplus Q) - (O_E) \sim (P) - (O_E) + (Q) - (O_E)\\
+                \psi(P \oplus Q) = \psi(P) + \psi(Q)
+            \end{gather*}
+            as required.
+
+        \item Next time. \qedhere
+    \end{enumerate}
 \end{proof}
 
 \end{document}
